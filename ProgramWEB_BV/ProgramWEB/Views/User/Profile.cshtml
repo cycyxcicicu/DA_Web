@@ -1,0 +1,266 @@
+﻿@{
+    ViewBag.Title = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pageNow =
+    new LocationPage(DefinePage.home,
+        new LocationPage(DefinePage.user_Profile));
+    Dictionary<string, object> data = ViewBag.data;
+    NhanSu nhanSu = (NhanSu)data["nhanSu"];
+    List<BaoHiem> baoHiems = (List<BaoHiem>)data["baoHiem"];
+    TaiKhoan taiKhoan = (TaiKhoan)data["taiKhoan"];
+    List<LichSuLamViec> lichSuLamViecs = (List<LichSuLamViec>)data["lichSuLamViec"];
+    List<KhenThuongKyLuat> khenThuongKyLuats = (List<KhenThuongKyLuat>)data["khenThuongKyLuat"];
+}
+@using ProgramWEB.Models.Object;
+@using ProgramWEB.Define;
+@using ProgramWEB.Libary;
+@section cssContent {
+    <link href="~/Contents/main/css/management.css" rel="stylesheet" />
+    <link href="~/Contents/main/css/home-management.css" rel="stylesheet" />
+    <link href="~/Contents/main/css/profile.css" rel="stylesheet" />
+}
+@section jsContent {
+    <script>
+        var urlAvatar = '@(string.IsNullOrEmpty(taiKhoan.TK_AnhDaiDien) ? "/Images/avatar.png" : "/Images/avatar/" + taiKhoan.TK_AnhDaiDien)';
+        var nutLuuAvt = $('#save-changeAvatar');
+        var nutHuyAvt = $('#cancel-changeAvatar');
+        var nutThayDoiAvt = $('.changeAvatar');
+        var formThayDoiAvt = $('#changeAvatar');
+        var avatar = $('#avatar');
+        var show = () => { nutThayDoiAvt.hide(); nutHuyAvt.show(); nutLuuAvt.show() }
+        var hide = () => { nutThayDoiAvt.show(); nutHuyAvt.hide(); nutLuuAvt.hide() }
+        formThayDoiAvt.change(() => {
+            if (formThayDoiAvt[0].files.length > 0)
+                urlImg = URL.createObjectURL(formThayDoiAvt[0].files[formThayDoiAvt[0].files.length - 1])
+            checkImageType(urlImg, () => {
+                show()
+                avatar.css({ 'background-image': `url('${urlImg}')` })
+            })
+        })
+        nutHuyAvt.click(() => {
+            avatar.css({ 'background-image': `url('${urlAvatar}')` })
+            formThayDoiAvt.val('')
+            hide()
+        })
+        nutLuuAvt.click(() => {
+            $('#form').submit()
+        })
+        nutHuyAvt.hide()
+        nutLuuAvt.hide()
+    </script>
+}
+<div class="content-wrapper">
+    @if (data != null)
+    {
+        <section class="section profile">
+            <div class="row">
+                <div class="col-xl-4 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body profile-card d-flex flex-column align-items-center">
+                            <div class="rounded-circle" id="avatar" style="width: 200px; height: 200px;
+                                    background-image: url('@(string.IsNullOrEmpty(taiKhoan.TK_AnhDaiDien) ? "/Images/avatar.png" : "/Images/avatar/" + taiKhoan.TK_AnhDaiDien)');
+                                    background-size: 100%; background-color: black; background-repeat: no-repeat; background-position: center">
+                            </div>
+                            <h4 style="margin: 10px 0">@nhanSu.NS_HoVaTen</h4>
+                            <div class="d-flex flex-row flex-wrap justify-content-around">
+                                <form action="@DefinePage.user_Profile.url" id="form" method="post" enctype="multipart/form-data">
+                                    <label type="button" for="changeAvatar" class="changeAvatar btn btn-primary">Thay đổi ảnh đại diện</label>
+                                    <input type="file" name="changeAvatar" id="changeAvatar" class="d-none" />
+                                    <button type="button" id="save-changeAvatar" class="btn btn-primary bg-dark">Lưu thay đổi</button>
+                                    <button type="button" id="cancel-changeAvatar" class="btn btn-secondary">Hủy bỏ</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8 col-md-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-body pt-3">
+                            <!-- Bordered Tabs -->
+                            <ul class="nav nav-tabs nav-tabs-bordered">
+
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab"
+                                            style="color: #6C757D !important" data-bs-target="#profile-overview">
+                                        Thông tin
+                                    </button>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content pt-2">
+
+                                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                                    <div class="info">
+                                        <h5 class="title-info card-title">Thông tin cơ bản</h5>
+                                        <div class="content-info">
+                                            <ul>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label ">Mã</div>
+                                                        <div class="col-lg-9 col-md-8">@nhanSu.NS_Ma</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label ">Họ và tên</div>
+                                                        <div class="col-lg-9 col-md-8">@nhanSu.NS_HoVaTen</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Giới tính</div>
+                                                        <div class="col-lg-9 col-md-8">@(nhanSu.NS_GioiTinh != null ? nhanSu.NS_GioiTinh.Value ? "Nam" : "Nữ" : "Không biết")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Ngày sinh</div>
+                                                        <div class="col-lg-9 col-md-8">
+                                                            @(nhanSu.NS_NgaySinh != null ? StringHelper.toDateView(nhanSu.NS_NgaySinh.Value) : "Chưa cập nhập")
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Số điện thoại</div>
+                                                        <div class="col-lg-9 col-md-8">@(!string.IsNullOrEmpty(nhanSu.NS_SoDienThoai) ? ("(+84) " + nhanSu.NS_SoDienThoai) : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Email</div>
+                                                        <div class="col-lg-9 col-md-8">@(!string.IsNullOrEmpty(nhanSu.NS_Email) ? nhanSu.NS_Email : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Địa chỉ</div>
+                                                        <div class="col-lg-9 col-md-8">@(!string.IsNullOrEmpty(nhanSu.NS_DiaChi) ? nhanSu.NS_DiaChi : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Số định danh</div>
+                                                        <div class="col-lg-9 col-md-8">@(!string.IsNullOrEmpty(nhanSu.NS_SoCCCD) ? nhanSu.NS_SoCCCD : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Trình độ học vấn</div>
+                                                        <div class="col-lg-9 col-md-8">@(!string.IsNullOrEmpty(nhanSu.NS_HocVan) ? nhanSu.NS_HocVan : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Số tài khoản NH</div>
+                                                        <div class="col-lg-9 col-md-8">@(!string.IsNullOrEmpty(nhanSu.NS_SoTaiKhoanNganHang) ? nhanSu.NS_SoTaiKhoanNganHang : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Tên chủ tài khoản NH</div>
+                                                        <div class="col-lg-9 col-md-8">@(!string.IsNullOrEmpty(nhanSu.NS_TenChuTaiKhoan) ? nhanSu.NS_TenChuTaiKhoan : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-4 label">Ngày vào</div>
+                                                        <div class="col-lg-9 col-md-8">@(nhanSu.NS_NgayVao != null ? StringHelper.toDateView(nhanSu.NS_NgayVao.Value) : "Chưa cập nhập")</div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="@(baoHiems != null && baoHiems.Count > 0 ? "info" : "row")">
+                                                        <div class="col-lg-3 col-md-4 label">Thông tin bảo hiểm</div>
+                                                        @if (baoHiems != null && baoHiems.Count > 0)
+                                                        {
+                                                            <div class="content-info">
+                                                                <ul>
+                                                                    @for (int i = 0; i < baoHiems.Count; i++)
+                                                                    {
+                                                                        BaoHiem baoHiem = baoHiems[i];
+                                                                        <li>STT: @(i + 1)</li>
+                                                                        <li>Số bảo hiểm: @(string.IsNullOrEmpty(baoHiem.BH_SoBaoHiem) ? "" : baoHiem.BH_SoBaoHiem)</li>
+                                                                        <li>
+                                                                            Ngày cấp: @(baoHiem.BH_NgayCap != null ? StringHelper.toDateView(baoHiem.BH_NgayCap.Value) : "")
+                                                                        </li>
+                                                                        <li>Nơi cấp: @(string.IsNullOrEmpty(baoHiem.BH_NoiCap) ? "" : baoHiem.BH_NoiCap)</li>
+                                                                        <li>
+                                                                            Ngày hết hạn: @(baoHiem.BH_NgayHetHan != null ? StringHelper.toDateView(baoHiem.BH_NgayHetHan.Value) : "")
+                                                                        </li>
+                                                                        <li>Nơi khám bệnh: @(string.IsNullOrEmpty(baoHiem.BH_NoiKhamBenh) ? "" : baoHiem.BH_NoiKhamBenh)</li>
+                                                                    }
+                                                                </ul>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col-lg-9 col-md-8">Chưa cập nhập</div>
+                                                        }
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="info">
+                                        <h5 class="title-info card-title">Lịch sử làm việc</h5>
+                                        <div class="content-info">
+                                            <ul class="history">
+                                                @foreach (var item in lichSuLamViecs)
+                                                {
+                                                    <li class="history-item">
+                                                        <h6 class="history-item-title">
+                                                            @(item.LSLV_NgayBatDau == null ? "Trước đó" : StringHelper.toDateView(item.LSLV_NgayBatDau.Value))
+                                                            -
+                                                            @(item.LSLV_NgayKetThuc == null ? "Nay" : StringHelper.toDateView(item.LSLV_NgayKetThuc.Value))
+                                                        </h6>
+                                                        <ul class="detail-job content-info">
+                                                            <li>
+                                                                Làm việc tại: @if (!string.IsNullOrEmpty(item.BP_Ma))
+                                                                {<a href="@DefinePage.management_BoPhan.url?ma=@item.BP_Ma" class="text-decoration-underline">@item.BP_Ma</a>}
+                                                            </li>
+                                                            <li>Chức vụ: @item.LSLV_ChucVu</li>
+                                                        </ul>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="info">
+                                        <h5 class="title-info card-title">Khen thưởng kỷ luật</h5>
+                                        @if (khenThuongKyLuats != null && khenThuongKyLuats.Count > 0) {
+                                            <div class="content-info">
+                                                <ul>
+                                                    @for (int i = 0; i < khenThuongKyLuats.Count; i++)
+                                                    {
+                                                        <li>
+                                                            <span>STT: @(i + 1)</span>
+                                                            <div class="content-info">
+                                                                <ul>
+                                                                    <li>Hình thức: @khenThuongKyLuats[i].KTKL_HinhThuc</li>
+                                                                    <li>Thời gian: @(khenThuongKyLuats[i].KTKL_ThoiGian == null ? "" : StringHelper.toDateTimeView(khenThuongKyLuats[i].KTKL_ThoiGian.Value))</li>
+                                                                    <li>Mô tả: @khenThuongKyLuats[i].KTKL_MoTa</li>
+                                                                    <li>Số tiền: @khenThuongKyLuats[i].KTKL_SoTien</li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div><!-- End Bordered Tabs -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <h2>NULL</h2>
+    }
+</div>
+
+

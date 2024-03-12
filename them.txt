@@ -1,0 +1,19 @@
+link source code
+https://drive.google.com/drive/folders/1vRNAm4LyhRRaAzdC5-8izqKaVDPWBxLd?fbclid=IwAR32TcvyQTFJxnkvI1l3CgrzIXrvG2Vp_fjbvrSr1kOhVlTcdjut3nlxikE
+link google docx báo cáo
+https://docs.google.com/document/d/1vIIrIbkLlTCJUceVS4ubYlE1YZ26Tb11/edit#heading=h.zfhw4jfkka61
+link project đã hosting
+http://thuong2003-001-site1.etempurl.com
+
+tài khoản: admin
+mật khẩu: namdinh1
+
+hướng dẫn: 
+- import database hoặc dán câu lệnh tạo bảng và chạy trên sql server 
+- mở project bằng visual code đã cài asp.net và mở bằng cách mở file Program_WEB_BV > .sln
+- sửa file web.config: 
+	+ data source=<tên server của bạn trong sql server> 
+	+ initial catalog=<tên database bạn đặt hoặc k đặt thì không sửa phần này vì đã cài mặc định>
+	+ user id=<username đăng nhập sql server của bạn>
+	+ password=<password đăng nhập sql server của bạn>
+- chạy và thử nghiệm chương trìnhh

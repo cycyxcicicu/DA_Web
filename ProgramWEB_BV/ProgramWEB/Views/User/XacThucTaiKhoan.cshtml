@@ -1,0 +1,194 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang xác thực tài khoản</title>
+
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="~/Contents/bootstrap/bootstrap.min.css">
+
+    <!-- fontawesome-->
+    <link href="~/Contents/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />
+
+    <!-- style main -->
+    <link rel="stylesheet" href="~/Contents/main/css/user-login.css">
+
+    <!-- Jquery-->
+    <script src="~/Scripts/pluto/js/jquery.js"></script>
+
+    <!-- Libart-->
+    <script src="~/Scripts/libary.js"></script>
+
+</head>
+<body>
+<div id="wrapper">
+    <form style="margin-left:20px ; margin-right:20px ; border-radius: 20px;" method="POST" action="/User/XacThucTaiKhoan" id="form-login" class="d-flex flex-column">
+        <h1 class="form-heading">Xác thực tài khoản</h1>
+        <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show p-3" role="alert">
+            <span class="content-text">
+                Hệ thống đã gửi mã xác thực về email <span class="fw-bold">@ViewBag.email</span>.
+                Vui lòng kiểm tra email để lấy mã xác thực. Xin lưu ý, mã xác thực chỉ có hạn trong vòng 5 phút kể từ lúc gửi.
+            </span>
+            <button type="button" class="btn-close"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i></button>
+        </div>
+        <div class="alert alert-error bg-danger text-light border-0 alert-dismissible fade show p-3 d-none" role="alert">
+            <span class="content-text">
+            </span>
+            <button type="button" class="btn-close"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i></button>
+        </div>
+        <div class="form-group flex-row border-0 justify-content-between" style="padding-left: 0; padding-right: 0">
+            <div class="form-group">
+                <div class="input-text d-flex flex-row flex-nowrap align-items-baseline">
+                    <i class="fa-solid fa-key"></i>
+                    <input type="text" class="form-input" name="ma-xac-thuc" id="ma-xac-thuc" placeholder="Nhập mã xác thực" value="admin">
+                </div>
+            </div>
+            <button type="button" id="gui-lai" class="btn btn-primary text-nowrap">Gửi lại<span></span></button>
+        </div>
+        <span class="text-danger" id="errorMaXacThuc">&nbsp;</span>
+        <div class="form-group">
+            <div class="input-text d-flex flex-row flex-nowrap align-items-baseline">
+                <input type="password" class="form-input" name="newPassword" id="newPassword" placeholder="Nhập mật khẩu mới" value="namdinh1">
+                <div class="eye">
+                    <i class="far fa-eye"></i>
+                </div>
+            </div>
+        </div>
+        <span class="text-danger" id="errorNewPassword">&nbsp;</span>
+        <div class="form-group">
+            <div class="input-text d-flex flex-row flex-nowrap align-items-baseline">
+                <input type="password" class="form-input" name="repeatPassword" id="repeatPassword" placeholder="Nhập lại mật khẩu mới" value="edee">
+                <div class="eye">
+                    <i class="far fa-eye"></i>
+                </div>
+            </div>
+        </div>
+        <span class="text-danger" id="errorRepeatPassword">&nbsp;</span>
+        <div class="btns d-flex flex-column">
+            <button type="button" class="form-submit btn-submit">Xác nhận</button>
+            <a class="cancel bg-danger" href="/Home">Hủy bỏ</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+<script>
+    var root = $('#wrapper');
+    var daucach = '&nbsp;';
+    var success = $('.alert-success .content-text');
+    var error = $('.alert-error .content-text');
+    var errorRepeatPassword = $('#errorRepeatPassword');
+    var errorNewPassword = $('#errorNewPassword');
+    var errorMaXacThuc = $('#errorMaXacThuc');
+    var maXacThucInput = $('#ma-xac-thuc')
+    var newPasswordInput = $('#newPassword')
+    var repeatPasswordInput = $('#repeatPassword')
+    var email = "@ViewBag.email"
+    $(document).ready(function () {
+        $('.eye').click(function () {
+            $(this).toggleClass('open');
+            $(this).children('i').toggleClass('fa-eye-slash fa-eye');
+            if ($(this).hasClass('open')) {
+                $(this).prev().attr('type', 'text');
+            } else {
+                $(this).prev().attr('type', 'password');
+            }
+        });
+        $('#gui-lai').click(function () {
+            $.ajax({
+                url: "/User/GuiLaiMa",
+                data: {
+                    email: email
+                },
+                type: "POST",
+                dataType: 'json',
+                success: (data) => {
+                    if (data["success"]) {
+                        demNguoc()
+                    } else if (data["error"]) {
+                        error.val(data["error"])
+                        error.parent().addClass('d-none')
+                    }
+                },
+                error: (data) => {
+                    error.val(data)
+                    error.parent().addClass('d-none')
+                }
+            })
+        })
+        $('.btn-close').click(function () {
+            $(this).parent().addClass('d-none');
+        })
+        $('.btn-submit').click(function () {
+            let can = true;
+            let newPassword = newPasswordInput.val();
+            let repeatPassword = repeatPasswordInput.val();
+            let maXacThuc = maXacThucInput.val();
+            errorRepeatPassword.html(daucach)
+            errorNewPassword.html(daucach)
+            errorMaXacThuc.html(daucach)
+            error.parent().addClass('d-none');
+            if (maXacThuc.length != 6 || maXacThuc.split('').some((item) => (item > '9' || item < '0'))) {
+                errorMaXacThuc.text('Mã xác thực phải có đúng 6 ký tự số')
+                can = false;
+            }
+            if (newPassword.length < 6) {
+                errorNewPassword.text('Mật khẩu phải có tối thiểu 6 ký tự');
+                can = false
+            }
+            if (repeatPassword != newPassword) {
+                errorRepeatPassword.text('Mật khẩu lặp lại phải trùng với mật khẩu mới');
+                can = false
+            }
+            if (can) {
+                $.ajax({
+                    url: "/User/DoiMatKhauMoi",
+                    data: {
+                        email: email,
+                        maXacThuc: maXacThuc,
+                        newPassword: newPassword
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: (data) => {
+                        if (data["success"]) {
+                            success.text(data["success"])
+                            setInterval(() => { window.location = "/Home" }, 2000)
+                        } else if (data["error"]) {
+                            error.text(data["error"])
+                            error.parent().removeClass('d-none')
+                        }
+                    },
+                    error: (data) => {
+                        alert('error')
+                        console.log(data)
+                    }
+
+                })
+            }
+        })
+    })
+    var demNguoc = function () {
+        let second = 60;
+        $('#gui-lai').children().text(" (" + second-- + "s)");
+        $('#gui-lai').prop('disabled', true);
+        let back = () => {
+            if (second > 0) {
+                $('#gui-lai').children().text(" (" + second-- + "s)");
+            } else {
+                $('#gui-lai').children().text('');
+                $('#gui-lai').prop('disabled', false);
+                back = {}
+                clearInterval(d)
+            }
+        }
+        back()
+        let d = setInterval(back, 1000)
+    }
+    demNguoc()
+</script>

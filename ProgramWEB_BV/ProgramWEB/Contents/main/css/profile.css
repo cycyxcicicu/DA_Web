@@ -1,0 +1,24 @@
+﻿.card {
+    cursor: default;
+}
+
+.changeAvatar {
+    background-color: white !important;
+    color: #6C757D !important;
+}
+
+.changeAvatar:hover {
+    opacity: 0.8;
+}
+
+#save-changeAvatar:hover {
+    opacity: 0.8;
+}
+
+.info .content-info {
+    padding-left: 10px;
+}
+
+.tab-content.pt-2 {
+    border-bottom: 1px solid;
+}

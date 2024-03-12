@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = "Quản lý ngày nghỉ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pageNow =
+    new LocationPage(DefinePage.home,
+        new LocationPage(DefinePage.management,
+            new LocationPage(DefinePage.management_NgayNghi)));
+}
+@section cssContent {
+    
+    <link href="~/Contents/main/css/management.css" rel="stylesheet" />
+    <link href="~/Contents/loader/style.css" rel="stylesheet" />
+    <link href="~/Contents/alert-f8/style.css" rel="stylesheet" />
+}
+@using ProgramWEB.Models.Data;
+@using ProgramWEB.Define;
+@using ProgramWEB.Libary;
+<div class="content-wrapper">
+</div>
+@section jsContent {
+    <script src="~/Scripts/export-file/dist/table2excel.js"></script>
+    <script src="~/Contents/alert-f8/script.js"></script>
+    <script src="~/Scripts/management/main.js"></script>
+    <script>
+        $('#main').addClass('gird wide');
+        var root = $('.content-wrapper');
+        var dauCach = '&nbsp;';
+        var namePage = 'ngày nghỉ';
+        var error;
+        var success;
+        var page = 1;
+        var pageSize = 10;
+        var json = JSON.parse("@ViewBag.jsonString".replace(/&quot;/g, '"'));
+        var countData = -1;
+        var nameItems = json["nameModel"];
+        var nameTiengViets = json["nameRender"];
+        var sortBy = json["sortBy"];
+        var required = json["required"];
+        var findBy = json["findBy"];
+        var hanhDong = json["action"];
+        var sortTangDan = true;
+        var count = nameTiengViets.length;
+        var datas = [{}];
+        var nameObj = [{}];
+        for (let index = 0; index < count; index++) {
+            this.nameObj[nameTiengViets[index]] = { type: "", id: "", using: "" }
+            this.nameObj[nameTiengViets[index]].id = removeVietnameseTones(nameTiengViets[index].replace(/ /g, ''));
+            this.nameObj[nameTiengViets[index]].using = true;
+        }
+        var createRowTable = function (item, item1, index, id) {
+            let using = nameObj[nameTiengViets[index]].using;
+            let idName = nameObj[nameTiengViets[index]].id + '-' + id;
+            let data = item[item1];
+            switch (index) {
+                case 1:
+                    return `
+                        <td class="${using ? "" : "d-none"}"
+                            id="${idName}">${data ? toDateView(data) : ''} 
+                        </td >`
+            }
+            return `
+            <td class="${using ? "" : "d-none"}"
+               id="${idName}">${data ? data : ''}
+            </td >
+            `;
+        }
+        var createInputFormAddOrUpdate = function (thaotac, result, item, index, id) {
+            let data = result[nameObj[item].id] ? (result[nameObj[item].id]).trim() : "";
+            let idName = nameObj[item].id + '-' + thaotac + (thaotac != 'search' ? '-' + id : '');
+            switch (index) {
+                case 0:
+                    return `
+                    <input type="number" name="${idName}" id="${idName}" class="form-control input-${thaotac}"
+                        value="${data}" min="0" ${thaotac == 'search' ? '' : 'disabled'}
+                        placeholder="Nhập ${item.toLowerCase()}">
+                    `
+                case 1:
+                    return `
+                    <input type="date" name="${idName}" id="${idName}" class="form-control input-${thaotac}"
+                        value="${data.length >= 8 ? toDateInput(data) : ""}"
+                            placeholder="Nhập ${item.toLowerCase()}">
+                    `
+            }
+            return `<input type="text" name="${idName}" id="${idName}" class="form-control input-${thaotac}"
+                value="${data}"
+                placeholder="Nhập ${item.toLowerCase()}">`
+        }
+        var convertDataToServer = function (item, index) {
+            return $('#' + item).val() ? $('#' + item).val().trim() : null;
+        }
+        var checkDataToServer = function (item, index) {
+            if ((item == null || item.length == 0) && required[index])
+                return "Trường này không được để trống"
+            return undefined;
+        }       
+        load()
+    </script>
+}

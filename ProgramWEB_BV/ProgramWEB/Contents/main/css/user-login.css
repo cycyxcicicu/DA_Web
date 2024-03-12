@@ -1,0 +1,115 @@
+body{
+    background-image: url('/Images/bg-login.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+* {
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 16px;
+}
+
+#wrapper{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.author-item {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.author-item label {
+    margin: 0;
+    margin-left: 10px;
+    color: white;
+}
+
+#form-login{
+    position: relative;
+    max-width: 400px;
+    background: rgb(40, 71, 71);
+    flex-grow: 1;
+    padding: 30px;
+    box-shadow: 0px 0px 17px 2px rgba(255, 255, 255, 0.8);
+}
+.form-heading{
+    font-size: 25px;
+    color: #f5f5f5;
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.form-group{
+    border-bottom: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+}
+.form-group i{
+    color: #fff;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-right: 10px;
+}
+.form-input{
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: #f5f5f5;
+    flex-grow: 1;
+    padding: 6px;
+}
+.form-input::placeholder{
+    color: #f5f5f5;
+}
+#eye i{
+    padding-right: 0;
+    cursor: pointer;
+}
+.form-submit, .cancel {
+    background: transparent;
+    border: 1px solid #f5f5f5;
+    color: #fff;
+    width: 100%;
+    border-radius: 20px;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    transition: 0.25s ease-in-out;
+    margin-top: 5px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 0.8;
+}
+a:hover {
+   text-decoration: underline;
+}
+.cancel {
+    text-decoration: none !important;
+}
+.form-submit:hover, .cancel:hover {
+    border: 1px solid #54a0ff;
+}
+.cancel:hover {
+    opacity: 1;
+    color: white;
+    text-decoration: none;
+}
+.btn-close {
+    background: none;
+    border: none;
+    right: 10px;
+    top: 10px;
+    position: absolute;
+}
+.alert {
+    word-wrap: break-word;
+}
+
+.form-group {
+    padding: 1px 10px;
+}

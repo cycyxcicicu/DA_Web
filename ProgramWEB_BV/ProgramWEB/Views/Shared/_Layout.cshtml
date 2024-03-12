@@ -1,0 +1,109 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <title>@ViewBag.Title</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- site icon -->
+    <link rel="icon" href="~/Contents/pluto/images/fevicon.png" type="image/png" />
+    <!-- bootstrap css -->
+    <link rel="stylesheet" href="~/Contents/bootstrap/bootstrap.min.css" />
+    <!-- site css -->
+    <link rel="stylesheet" href="~/Contents/pluto/style.css" />
+    <!-- responsive css -->
+    <link rel="stylesheet" href="~/Contents/pluto/css/responsive.css" />
+    <!-- color css -->
+    <link rel="stylesheet" href="~/Contents/pluto/css/color_2.css" />
+    <!-- select bootstrap -->
+    <link rel="stylesheet" href="~/Contents/pluto/css/bootstrap-select.css" />
+    <!-- scrollbar css -->
+    <link rel="stylesheet" href="~/Contents/pluto/css/perfect-scrollbar.css" />
+    <!-- gird layout -->
+    <link rel="stylesheet" href="~/Contents/gird-layout/grid.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" href="~/Contents/pluto/css/custom.css" />
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="~/Contents/fontawesome-free-6.4.2-web/css/all.min.css" />
+    <!-- content css-->
+    @RenderSection("cssContent", required: false)
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond/js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="dashboard dashboard_1">
+    @using ProgramWEB.Define;
+    <div class="full_container">
+        <div class="inner_container">
+            <!-- Sidebar  -->
+            <nav id="sidebar">
+                @RenderPage("~/Views/Shared/Parts/_Sidebar.cshtml")
+            </nav>
+
+            <!-- Content  -->
+            <div id="content">
+                <!-- topbar -->
+                <div class="topbar">
+                    @RenderPage("~/Views/Shared/Parts/_Topbar.cshtml")
+                </div>
+                <!-- dashboard inner -->
+                <div class="midde_cont">
+                    <div class="container-fluid">
+                        <div id="main">
+                            @if (ViewBag.pageNow != null)
+                            {
+                                LocationPage page = ViewBag.pageNow;
+                                <div class="pagetitle">
+                                    <nav>
+                                        <ol class="breadcrumb">
+                                            @while (page.child != null)
+                                            {
+                                                <li class="breadcrumb-item"><a href="@page.page.url">@page.page.name</a></li>
+                                                page = page.child;
+                                            }
+                                            <li class="breadcrumb-item active">@page.page.name</li>
+                                        </ol>
+                                    </nav>
+                                </div><!-- End Page Title -->
+                            }
+                            @RenderBody()
+                        </div>
+                    </div>
+                    <!-- footer -->
+                    <div class="container-fluid">
+                        @RenderPage("~/Views/Shared/Parts/_Footer.cshtml")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+    <script src="~/Scripts/pluto/js/jquery.js"></script>
+    <script src="~/Scripts/pluto/js/popper.min.js"></script>
+    <script src="~/Scripts/pluto/js/bootstrap.min.js"></script>
+    <!-- nice scrollbar -->
+    <script src="~/Scripts/pluto/js/perfect-scrollbar.min.js"></script>
+    <script>
+        var ps = new PerfectScrollbar('#sidebar');
+    </script>
+    <!-- custom js -->
+    <script src="~/Scripts/pluto/js/custom.js"></script>
+    <!-- libary js-->
+    <script src="~/Scripts/libary.js"></script>
+    <!-- Content js-->
+    @RenderSection("jsContent", required: false)
+</body>
+</html>

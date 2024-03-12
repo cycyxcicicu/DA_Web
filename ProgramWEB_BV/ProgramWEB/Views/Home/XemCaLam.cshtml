@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Ca làm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pageNow =
+    new LocationPage(DefinePage.home,
+        new LocationPage(DefinePage.home_XemCaLam));
+    IEnumerable<CaLam> caLams = (IEnumerable<CaLam>)ViewBag.data;
+}
+@using ProgramWEB.Models.Object;
+@using ProgramWEB.Define;
+@using ProgramWEB.Libary;
+@section cssContent {
+    <link href="~/Contents/main/css/management.css" rel="stylesheet" />
+    <link href="~/Contents/main/css/home-management.css" rel="stylesheet" />
+}
+<div class="content-wrapper">
+    <ul style="padding: 0 20px" class="row flex-row">
+        @if (caLams != null && caLams.Count() > 0)
+        {
+            foreach (var item in caLams)
+            {
+                <div class="col-md-6 col-lg-3">
+                    <div class="card material-card" style="cursor: default">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <span>
+                                    @item.CL_TenCa
+                                </span>
+                            </h5>
+                            <div class="d-flex align-items-center mb-2 mt-4">
+                                @StringHelper.to2(item.CL_GioBatDau.ToString()):@StringHelper.to2(item.CL_PhutBatDau.ToString()) 
+                                - 
+                                @StringHelper.to2(item.CL_GioKetThuc.ToString()):@StringHelper.to2(item.CL_PhutKetThuc.ToString())
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </ul>
+</div>
+

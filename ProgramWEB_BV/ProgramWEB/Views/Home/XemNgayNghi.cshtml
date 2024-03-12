@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "Ngày nghỉ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pageNow =
+    new LocationPage(DefinePage.home,
+        new LocationPage(DefinePage.home_XemNgayNghi));
+}
+@using ProgramWEB.Models.Object;
+@using ProgramWEB.Define;
+@using ProgramWEB.Libary;
+@section cssContent {
+    <link rel="stylesheet" href="~/Contents/caulendar/style.css">
+    <link href="~/Contents/main/css/management.css" rel="stylesheet" />
+    <link href="~/Contents/main/css/home-management.css" rel="stylesheet" />
+}
+@section jsContent {
+    <script src="~/Scripts/caulendar/main.js"></script>
+    <script>
+        var json = JSON.parse("@ViewBag.jsonString".replace(/&quot;/g, '"'));
+        var data = json["data"]
+        var year = json["year"]
+        var month = json["month"]
+        $('.content-wrapper').html(`
+            <section class= "ftco-section" >
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="calendar w-100">
+                                <div class="header">
+                                    <a data-action="prev-month" href="${"/Home/XemNgayNghi?" + (month - 1 > 0 ? ("year=" + year + "&month=" + (month - 1)) : ("year=" + (year - 1) + "&month=12")) }" title="Previous Month"><i></i></a>
+                                    <div class="text" data-render="month-year"></div>
+                                    <a data-action="next-month" href="${"/Home/XemNgayNghi?" + (month + 1 <= 12 ? ("year=" + year + "&month=" + (month + 1)) : ("year=" + (year + 1) + "&month=1")) }" onclick="nextMonth()" title="Next Month"><i></i></a>
+                                </div>
+                                <div class="months" data-flow="left">
+                                    <div class="month month-a">
+                                        <div class="render render-a"></div>
+                                    </div>
+                                    <div class="month month-b">
+                                        <div class="render render-b"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="content w-100 h-100">
+                                <div class="content-exp w-100">
+                                    <div class="expliquer d-flex flex-column">
+                                        <div class="item-exp d-flex flex-row">
+                                            <i class="bg-main"></i>
+                                            <span class="text">Ngày hôm nay</span>
+                                        </div>
+                                        <div class="item-exp d-flex flex-row">
+                                            <i class="bg-danger"></i>
+                                            <span class="text">Ngày nghỉ</span>
+                                        </div>
+                                        <div class="item-exp d-flex flex-row">
+                                            <i class="bg-success"></i>
+                                            <span class="text">Ngày đã chọn</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="propetie w-100 h-100">
+                                    <h5 class="now">${(new Date().getFullYear() == year) && (new Date().getMonth() + 1 == month) ? `Ngày ${new Date().getDate()} tháng ${month} năm ${year}` : ''}</h5>
+                                    <span>
+                                        ${data.reduce((result, item, index) => {
+                                            if (Number.parseInt(item.NN_Ngay.substr(8, 2)) == new Date().getDate())
+                                                return `Ngày nghỉ <br> Ghi chú: ${item.NN_GhiChu ? item.NN_GhiChu : 'Không có'}`
+                                            return result;
+                                        }, '')}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section >
+        `)
+        var toActiveSelect = (e) => {
+            $('.active-select').removeClass('active-select')
+            $(e).addClass('active-select')
+            let day = $(e).children().text().trim();
+            let monthYear = $('.text[data-render="month-year"] span').text().trim()
+            let mon = monthYear.substr(0, monthYear.indexOf(' ')).toLowerCase()
+            let yr = monthYear.substr(monthYear.indexOf(' '), monthYear.length).trim()
+            mon = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"].findIndex((item) => item == mon) + 1
+            $('.now').text(`Ngày ${day} tháng ${mon} năm ${yr}`)
+            let htmlGhiChu = data.reduce((result, item, index) => {
+                if (Number.parseInt(item.NN_Ngay.substr(8, 2)) == day)
+                    return `Ngày nghỉ <br> Ghi chú: ${item.NN_GhiChu ? item.NN_GhiChu : 'Không có'}`
+                return result;
+            }, '')
+            $($('.now').parent().children()[1]).html(htmlGhiChu)
+            setActiveDanger()
+        }
+        setting(toActiveSelect)
+        window.onload = function () {
+            var t = new Calendar({
+                RenderID: ".render-a",
+                Format: "M"
+            });
+            t.Calendar(year, month - 1)
+            t.showCurrent(), t.checkActive();
+            var e = document.querySelectorAll(".header [data-action]");
+            for (i = 0; i < e.length; i++) e[i].onclick = function () {
+                if (document.querySelector(".calendar .header").setAttribute("class", "header"), "true" == document.querySelector(".months").getAttribute("data-loading")) return document.querySelector(".calendar .header").setAttribute("class", "header active"), !1;
+                var e;
+                document.querySelector(".months").setAttribute("data-loading", "true"), this.getAttribute("data-action").includes("prev") ? (t.prevMonth(), e = "left") : (t.nextMonth(), e = "right"), t.checkActive(), document.querySelector(".months").setAttribute("data-flow", e), document.querySelector('.month[data-active="true"]').addEventListener("webkitTransitionEnd", function () {
+                    document.querySelector(".months").removeAttribute("data-loading")
+                }), document.querySelector('.month[data-active="true"]').addEventListener("transitionend", function () {
+                    document.querySelector(".months").removeAttribute("data-loading")
+                })
+            }
+            setActiveDanger()
+            $('.content').show(1000)
+        };
+        var setActiveDanger = () => {
+            if (this.data != null && this.data.length > 0)
+                for (var item of this.data) {
+                    let ngay = item.NN_Ngay.split('-')
+                    ngay = Number.parseInt(ngay[ngay.length - 1].substr(0, 2))
+                    for (let item1 of document.querySelectorAll('.cell span')) {
+                        if ($(item1).text() == ngay) {
+                            if ($(item1).parent().attr('class').indexOf('active') != -1)
+                                continue;
+                            $(item1).parent().addClass('active-danger')
+                        }
+                    }
+                }
+        }
+        $('.content').hide()
+    </script>
+}
+<div class="content-wrapper">
+</div>

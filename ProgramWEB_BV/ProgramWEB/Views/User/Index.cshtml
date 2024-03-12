@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Tài khoản của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pageNow =
+    new LocationPage(DefinePage.home,
+        new LocationPage(DefinePage.user));
+}
+@using ProgramWEB.Models.Data;
+@using ProgramWEB.Define;
+@using ProgramWEB.Libary;
+@section cssContent {
+    <link href="~/Contents/main/css/management.css" rel="stylesheet" />
+    <link href="~/Contents/main/css/home-management.css" rel="stylesheet" />
+}
+<div class="content-wrapper">
+</div>
+@section jsContent {
+    <script>
+        var toPage = url => { window.location = url; }
+    </script>
+}
+<div class="content-wrapper">
+    <div>
+        <h3>Tài khoản của tôi</h3>
+        <ul style="padding: 0 20px" class="row">
+            <div class="col-md-6 col-lg-3">
+                <div class="card material-card" onclick="toPage('@DefinePage.user_ChangePassword.url')">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span>
+                                Đổi mật khẩu
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                            </span>
+                        </h5>
+                        <div class="d-flex align-items-center mb-2 mt-4">
+                            <h2 class="mb-0 display-5">
+                                <i class="fa-solid fa-right-left"></i>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card material-card" onclick="toPage('@DefinePage.user_Logout.url')">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <span>
+                                Đăng xuất
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                            </span>
+                        </h5>
+                        <div class="d-flex align-items-center mb-2 mt-4">
+                            <h2 class="mb-0 display-5">
+                                <i class="fa-solid fa-plug-circle-xmark"></i>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ul>
+    </div>
+</div>
+
+

@@ -1,0 +1,97 @@
+﻿body {
+    background-image: url('/Images/bg-login.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+* {
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 16px;
+    color: white;
+}
+
+#menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+
+.sub-menu {
+    min-width: 500px;
+    border: 3px solid greenyellow;
+    border-radius: 20px;
+    background-color: rgb(33, 67, 97);
+    box-shadow: 0px 0px 17px 2px rgba(255, 255, 255, 0.8);
+    padding: 20px;
+}
+
+#form {
+
+}
+
+.sub-menu h1 {
+    text-align: center;
+    height: 10%;
+    line-height: 30px;
+    color: white;
+    font-weight: 600;
+    font-size: 32px;
+    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+#menu .sub-form .input1 {
+    position: relative;
+    left: 50px;
+    top: -74px;
+}
+
+
+#menu .sub-form .input2 {
+    position: relative;
+    left: 50px;
+    top: -58px;
+}
+
+#menu .sub-form .input3 {
+    position: relative;
+    left: 30px;
+    top: -30px;
+    border: 3px solid green;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+.button1 {
+    background-color: green;
+    border-radius: 10px;
+    position: relative;
+    left: -150px;
+    top: 5px;
+}
+
+.button2 {
+    background-color: green;
+    border-radius: 10px;
+    position: relative;
+    left: -10px;
+    top: -30px;
+}
+
+#menu .sub-form p {
+    position: relative;
+    left: 70px;
+}
+
+p {
+    margin: 0;
+}
+
+input:disabled {
+    opacity: 0.6;
+}
+
+.form-outline {
+    width: 100%;
+}

@@ -1,0 +1,232 @@
+﻿@{
+    ViewBag.Title = "Quản lý tài khoản"; Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pageNow =
+    new LocationPage(DefinePage.home,
+        new LocationPage(DefinePage.management,
+            new LocationPage(DefinePage.management_TaiKhoan)));
+}
+@section cssContent {
+    
+    <link href="~/Contents/main/css/management.css" rel="stylesheet" />
+    <link href="~/Contents/loader/style.css" rel="stylesheet" />
+    <link href="~/Contents/alert-f8/style.css" rel="stylesheet" />
+}
+@using ProgramWEB.Models.Data;
+@using ProgramWEB.Define;
+@using ProgramWEB.Libary;
+<div class="content-wrapper">
+</div>
+@section jsContent {
+    <script src="~/Scripts/export-file/dist/table2excel.js"></script>
+    <script src="~/Contents/alert-f8/script.js"></script>
+    <script src="~/Scripts/management/main.js"></script>
+    <script>
+        $('#main').addClass('gird wide');
+        var root = $('.content-wrapper');
+        var dauCach = '&nbsp;';
+        var namePage = 'tài khoản';
+        var error;
+        var success;
+        var page = 1;
+        var pageSize = 10;
+        var json = JSON.parse("@ViewBag.jsonString".replace(/&quot;/g, '"'));
+        var countData = -1;
+        var nameItems = json["nameModel"];
+        var nameTiengViets = json["nameRender"];
+        var sortBy = json["sortBy"];
+        var hanhDong = json["action"];
+        var required = json["required"];
+        var findBy = json["findBy"];
+        var sortTangDan = true;
+        var count = nameTiengViets.length;
+        var datas = [{}];
+        var nameObj = [{}];
+        var createActionOnRow = false;
+        for (let index = 0; index < count; index++) {
+            this.nameObj[nameTiengViets[index]] = { type: "", id: "", using: "" }
+            this.nameObj[nameTiengViets[index]].id = removeVietnameseTones(nameTiengViets[index].replace(/ /g, ''));
+            this.nameObj[nameTiengViets[index]].using = true;
+        }
+        var createRowTable = function (item, item1, index, id) {
+            let using = nameObj[nameTiengViets[index]].using;
+            let idName = nameObj[nameTiengViets[index]].id + '-' + id;
+            let data = item[item1];
+            switch (index) {
+                case 1:
+                    return `
+                     <td class="${using ? "" : "d-none"} ${data == 'true' || data == true ? 'text-danger fw-bold' : ''}"
+                        id="${idName}">${data == 'true' || data == true ? 'Admin' : 'Không'}
+                     </td >
+                    `
+                case 2:
+                    console.log(item[nameItems[index - 1]]);
+                    return `
+                     <td class="${using ? "" : "d-none"} ${data == 'true' || data == true ? 'text-primary fw-bold' : ''}"
+                        id="${idName}">
+                        ${(!hanhDong.capVaHuyQuyen ? data == true || data == 'true' ? 'Quản lý' : 'Không' :
+                            (data == false || data == 'false' ? 
+                            `<button type="button" onclick="capQuyen('${id}', false)" class="btn btn-primary">Cấp quyền</button>` :
+                            'Quản lý' + 
+                            (item[nameItems[index - 1]] ? '' :
+                            ` <button type="button" onclick="capQuyen('${id}', true)" class="btn btn-secondary">Hủy quyền</button>`)))
+                        }
+                     </td >
+                    `
+                case 3:
+                    return `
+                     <td class="${using ? "" : "d-none"} ${data == 'true' || data == true ? 'fw-bold text-danger' : ''}"
+                        id="${idName}">${data == 'true' || data == true ? 'Bị khóa' : !hanhDong.khoaTaiKhoan ? 'Không' :
+                        item[nameItems[index - 2]] ? '' :
+                        `<button type="button" onclick="khoaTaiKhoan('${id}')" class="btn btn-danger">Khóa</button>`
+                        }
+                     </td >
+                    `
+                case 4: 
+                    return `
+                    <td class="${using ? "" : "d-none"}"
+                       id="${idName}">${data ? toDateTimeView(data) : ''}
+                    </td >
+                    `
+                case count - 1: {
+                    let url = "@(DefinePage.management_NhanSu.url +  "?ma=")" + data;                                    
+                    return `
+                         <td class="${using ? "" : "d-none"}" id="${idName}"
+                         >${data ? `<a href="${url}" class="text-decoration-underline text-primary">${data}</a>` : ''}</td >
+                    `
+                }
+            }
+            return `
+            <td class="${using ? "" : "d-none"}"
+               id="${idName}">${data ? data : ''}
+            </td >
+            `;
+        }
+        var createInputFormAddOrUpdate = function (thaotac, result, item, index, id) {
+            let data = result[nameObj[item].id] ? (result[nameObj[item].id]).trim() : "";
+            let idName = nameObj[item].id + '-' + thaotac + (thaotac != 'search' ? '-' + id : '');
+            switch (index) {
+                case 1:
+                case 2: 
+                case 3:
+                    return `
+                    <div>
+                        <input type="radio" name="${idName}" 
+                            id="${index == 2 ? 'admin' : index == 3 ? 'qly' : 'khoa'}-${idName}" ${data == 'true' ? "checked" : ""} class="input-radio-${thaotac}">
+                        <label for="${index == 2 ? 'admin' : index == 3 ? 'qly' : 'khoa'}-${idName}">${index == 3 ? 'Quản lý' : index == 2 ? 'Admin' : 'Bị khóa'}</label >
+                        <input type="radio" name="${idName}" 
+                            id="no-${index == 2 ? 'admin' : index == 3 ? 'qly' : 'khoa'}-${idName}" ${data == 'false' ? "checked" : ""} class="input-radio-${thaotac}">
+                        <label for="no-${index == 2 ? 'admin' : index == 3 ? 'qly' : 'khoa'}-${idName}">Không</label>
+                        ${thaotac != 'search' ? ""
+                        : 
+                        `
+                        <input type="radio" name="${idName}" value="all"
+                            id="${idName}-all" class="input-radio-${thaotac}" ${!data ? 'checked' : ''}>
+                        <label for="${idName}-all">Tất cả</label>
+                        `
+                        }
+                    </div>`
+                case 4:
+                    return `
+                    <input type="datetime-local" name="${idName}" id="${idName}" value="${toDateTimeInput(data)}" class="form-control input-${thaotac}">
+                    `
+            }
+            return `<input type="text" name="${idName}" id="${idName}" class="form-control input-${thaotac}"
+                value="${data}" ${index == 0 ? thaotac == 'edit' ? 'disabled' : '' : '' }
+                placeholder="Nhập ${item.toLowerCase()}">`
+        }
+        var convertDataToServer;
+        var checkDataToServer;
+        var capQuyen = (ma, huy = false) => {
+            let url = window.origin + "/TaiKhoan/CapQuyen?username=" + ma + (huy ? "&huy=true" : '');
+            let success = function (data) {
+                if (data['success']) {
+                    new Promise(f => loadDataTable(f))
+                        .then(f => {
+                            toast({ title: 'Thành công', message: data['success'], type: 'success', duration: 2000 })
+                        })
+                }
+                if (data['error']) {
+                    toast({ title: 'Thất bại', message: data['error'], type: 'error', duration: 2000 })
+                }
+            }
+            let error = function (data) {
+                alert('error')
+                console.log(data)
+            }
+            onCanhBao(
+                huy ? "Bạn có chắc chắn muốn hủy quyền quản lý của tài khoản này chứ?" : 
+                    "Việc cấp quyền quản lý cho tài khoản có thể làm ảnh hưởng đến hệ thống. Bạn có chắc chắn chứ?",
+                ajaxToServer,
+                ({
+                    url: url,
+                    data: {},
+                    success: success,
+                    error: error
+                })
+            )
+        }
+        var khoaTaiKhoan = ma => {
+            let success = function (data) {
+                if (data['success']) {
+                    new Promise(f => loadDataTable(f))
+                        .then(f => {
+                            toast({ title: 'Thành công', message: data['success'], type: 'success', duration: 2000 })
+                        })
+                }
+                if (data['error']) {
+                    toast({ title: 'Thất bại', message: data['error'], type: 'error', duration: 2000 })
+                }
+            }
+            let error = function (data) {
+                alert('error')
+                console.log(data)
+            }
+            onCanhBao(
+                "Viêc khóa tài khoản sẽ khiến tài khoản không " + 
+                "thể truy cập vào hệ thống trong một thời gian nhất định. " + 
+                "Nhập thời gian muốn khóa (không nhập tức là khóa vĩnh viễn):",
+                ajaxToServer,
+                ({
+                    data: {},
+                    success: success,
+                    error: error
+                }),
+                `
+                <div>
+                    <input type="number" id="time-locked-${ma}" min="1" style="text-align: center; max-width: 50px; border-radius: 10px">
+                    <input type="radio" name="don-vi" id="locked-gio-${ma}" checked>
+                    <label for="locked-gio-${ma}">Giờ</label>
+                    <input type="radio" name="don-vi" id="locked-ngay-${ma}">
+                    <label for="locked-ngay-${ma}">Ngày</label>
+                </div>
+                `,
+                function (data) {
+                    let hourLocked = $('#time-locked-' + ma).val()
+                    if (hourLocked > 0) {
+                        if ($('#locked-ngay-' + ma).prop('checked')) {
+                            hourLocked *= 24;
+                        }
+                    }
+                    return {
+                        url: window.origin + "/TaiKhoan/KhoaTaiKhoan?username=" + ma + (hourLocked > 0 ? `&time=${hourLocked}` : ''),
+                        ...data
+                    }
+                }
+            )
+        }
+        var convertDataToServer = function (item, index) {
+            switch (index) {
+                case 2:
+                    return $('#admin-' + item).prop('checked') ? 'true' : ($('#no-admin-' + item).prop('checked') ? 'false' : null);
+                case 3:
+                    return $('#qly-' + item).prop('checked') ? 'true' : ($('#no-qly-' + item).prop('checked') ? 'false' : null);
+                case 4:
+                    return $('#khoa-' + item).prop('checked') ? 'true' : ($('#no-khoa-' + item).prop('checked') ? 'false' : null);
+            }
+            return $('#' + item).val() ? $('#' + item).val().trim() : null;
+        }
+        var checkDataToServer = function (item, index) {
+        }
+        load()
+    </script>
+}

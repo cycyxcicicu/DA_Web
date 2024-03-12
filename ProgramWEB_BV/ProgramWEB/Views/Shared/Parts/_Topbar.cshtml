@@ -1,0 +1,37 @@
+﻿@using ProgramWEB.Models.Object;
+@{
+    User user = null;
+    try
+    {
+        user = (User)Session[ProgramWEB.Define.DefineSession.userSession];
+    } catch { }
+}
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="full">
+        <button type="button" id="sidebarCollapse" class="sidebar_toggle"><i class="fa fa-bars"></i></button>
+        <div class="logo_section">
+            <a href="/Home">
+                <span style="margin-left: 10px; font-weight: 700; color: #0971b8; font-size: 20px; text-align: left;">
+                    Website <br />
+                    Management
+                </span>
+            </a>
+        </div>
+        <div class="right_topbar">
+            <div class="icon_info">
+                <ul class="user_profile_dd">
+                    <li>
+                        <a class="dropdown-toggle d-flex flex-row align-items-center" data-toggle="dropdown">
+                            <img class="img-responsive rounded-circle" src="@(string.IsNullOrEmpty(user.avatar) ? "/Images/avatar.png" : "/Images/avatar/" + user.avatar)" alt="#" />
+                            <span class="name_user">@user.username</span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="@ProgramWEB.Define.DefinePage.user_Profile.url">My Profile</a>
+                            <a class="dropdown-item" href="@ProgramWEB.Define.DefinePage.user_Logout.url"><span>Log Out</span> <i class="fa fa-sign-out"></i></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

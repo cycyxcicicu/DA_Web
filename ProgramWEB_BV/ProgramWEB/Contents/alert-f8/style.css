@@ -1,0 +1,275 @@
+﻿/* ======= Buttons ======== */
+
+/* Block */
+#toast .btn {
+    display: inline-block;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    padding: 12px 48px;
+    border-radius: 50px;
+    cursor: pointer;
+    min-width: 120px;
+    transition: opacity 0.2s ease;
+}
+
+/* Modifier */
+#toast .btn--size-l {
+    padding: 16px 56px;
+}
+
+#toast .btn--size-s {
+    padding: 8px 32px;
+}
+
+#toast .btn:hover {
+    opacity: 0.8;
+}
+
+#toast .btn + .btn {
+    margin-left: 16px;
+}
+
+#toast .btn--success {
+    background-color: #71be34;
+}
+
+#toast .btn--warn {
+    background-color: #ffb702;
+}
+
+#toast .btn--danger {
+    background-color: #ff623d;
+}
+
+#toast .btn--disabled {
+    opacity: 0.5 !important;
+    cursor: default;
+}
+
+/* ======= Toast message ======== */
+
+#toast {
+    position: fixed;
+    top: 90px;
+    right: 23px;
+    z-index: 999999;
+    display: block;
+    border: 0;
+}
+
+.toast {
+    display: flex !important;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 2px;
+    padding: 20px 0;
+    min-width: 400px;
+    max-width: 450px;
+    border-left: 4px solid;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    transition: all linear 0.3s;
+    border-top: 0;
+    border-bottom: 0;
+    border-right: 0;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(calc(100% + 32px));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+.toast--success {
+    border-color: #47d864;
+}
+
+.toast--success .toast__icon {
+    color: #47d864;
+}
+
+.toast--info {
+    border-color: #2f86eb;
+}
+
+.toast--info .toast__icon {
+    color: #2f86eb;
+}
+
+.toast--warning {
+    border-color: #ffc021;
+}
+
+.toast--warning .toast__icon {
+    color: #ffc021;
+
+}
+
+.toast--error {
+    border-color: #ff623d;
+}
+
+.toast--error .toast__icon {
+    color: #ff623d;
+}
+
+.toast + .toast {
+    margin-top: 24px;
+}
+
+.toast__icon {
+    font-size: 24px;
+}
+
+.toast__icon,
+.toast__close {
+    padding: 0 16px;
+}
+
+.toast__body {
+    flex-grow: 1;
+}
+
+.toast__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.toast__msg {
+    font-size: 14px;
+    color: #888;
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.toast__close {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.Dialog_wrapper__5aD4q {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 999
+}
+
+.Dialog_overlay__27wcK {
+    background-color: rgba(0,0,0,.3);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0
+}
+
+.Dialog_main__PPXtm {
+    background-color: #fff;
+    border-radius: 10px;
+    max-width: 80vw;
+    position: absolute;
+    width: 600px;
+    z-index: 1
+}
+
+.Dialog_header__0dUcJ {
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    font-size: 1.8rem;
+    padding: 20px 16px 16px;
+    position: relative
+}
+
+.Dialog_header__0dUcJ h3 {
+    margin: 0;
+    font-size: 18px;
+    text-transform: capitalize;
+}
+
+.Dialog_close-button__3tLfG {
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 2.8rem;
+    height: 36px;
+    line-height: 36px;
+    outline: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 26px
+}
+
+.Dialog_close-button__3tLfG svg {
+    color: gray
+}
+
+.Dialog_content-wrapper__oTjv7 {
+    padding: 24px 24px 24px 16px
+}
+
+.Dialog_content__fC8ze {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    font-weight: 600
+}
+
+.Dialog_action__kFm-L {
+    display: flex;
+    justify-content: flex-end
+}
+
+@media(min-width: 0px)and (max-width:739px) {
+    .Dialog_action__kFm-L {
+        justify-content: center
+    }
+
+        .Dialog_action__kFm-L .Dialog_confirm-button__j4ByN {
+            width: 150px
+        }
+}
+
+.Dialog_title__\+aMqC.Dialog_center__xhq7R {
+    text-align: center
+}
+
+.Button_btn__RW1e2 {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 1px solid var(--primary-color);
+    border-radius: 999px !important;
+    display: inline-block;
+    font-weight: 600;
+    outline: none;
+    text-align: center;
+    transition: .3s ease;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+    padding: 8px 16px;
+    margin-left: 8px;
+}

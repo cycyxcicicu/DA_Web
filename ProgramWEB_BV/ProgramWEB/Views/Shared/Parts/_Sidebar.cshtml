@@ -1,0 +1,56 @@
+﻿@using ProgramWEB.Models.Object;
+@{
+    User user = null;
+    try
+    {
+        user = (User)Session[ProgramWEB.Define.DefineSession.userSession];
+    } catch {}
+}
+@using ProgramWEB.Define;
+<div class="sidebar_blog_1">
+    <div class="sidebar-header">
+    </div>
+    <div class="sidebar_user_info">
+        <div class="icon_setting"></div>
+        <div class="user_profle_side">
+            <div class="user_img"><img class="img-responsive" src="@(string.IsNullOrEmpty(user.avatar) ? "/Images/avatar.png" : "/Images/avatar/" + user.avatar)" alt="#" /></div>
+            <div class="user_info">
+                <h6>@user.username</h6>
+                <p class="online"><span class="online_animation" id="sidebar-status"></span> <span>Online</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidebar_blog_2">
+    <h4>Tổng quan</h4>
+    <ul class="list-unstyled components">
+        <li class="active">
+            <a href="@DefinePage.home.url"><i class="fa-solid fa-house-chimney"></i><span>Trang chủ</span></a>
+        </li>
+        <li>
+            <a href="#!" data-toggle="collapse" class="dropdown-toggle"><i class="fa-solid fa-circle-user"></i> <span>Người dùng</span></a>
+            <ul class="collapse list-unstyled">
+                <li>
+                    <a href="@DefinePage.user_Profile.url">> <span>Thông tin cá nhân</span></a>
+                </li>
+                <li>
+                    <a href="@DefinePage.user.url">> <span>Tài khoản của tôi</span></a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#!" data-toggle="collapse" class="dropdown-toggle"><i class="fa-solid fa-bars-staggered"></i> <span>Chức năng</span></a>
+            <ul class="collapse list-unstyled">
+                @if (user.quyenQuanLy)
+                {
+                    <li>
+                        <a href="@DefinePage.management.url">> <span>Quản lý</span></a>
+                    </li>
+                }
+                <li>
+                    <a href="#!">> <span>Chấm công</span></a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,176 @@
+﻿@{ 
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang đăng nhập</title>
+
+    <!-- Bootstrap-->
+    <link rel="stylesheet" href="~/Contents/bootstrap/bootstrap.min.css">
+    
+    <!-- fontawesome-->
+    <link href="~/Contents/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" />
+
+    <!-- style main -->
+    <link rel="stylesheet" href="~/Contents/main/css/user-login.css">
+    
+    <!-- Jquery-->
+    <script src="~/Scripts/pluto/js/jquery.js"></script>
+
+    <!-- Libart-->
+    <script src="~/Scripts/libary.js"></script>
+</head>
+<body>
+    <div id="wrapper"></div>
+</body>
+</html>
+<script>
+    var root = $('#wrapper');
+    var daucach = '&nbsp;';
+    var error = null;
+    var success = null;
+    var errorUsername = daucach;
+    var errorPassword = daucach;
+    var username = "";
+    var password = "";
+    var keep = false;  
+    var createContent = function () {
+        return `
+            <form style="margin-left:20px ; margin-right:20px ; border-radius: 20px;" action="" id="form-login" class="d-flex flex-column">
+                <h1 class="form-heading">Đăng Nhập</h1>
+                ${error ? `
+                    <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                        ${error}
+                        <button type="button" class="btn-close"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i></button>
+                    </div>` : ""}
+                ${success ? `
+                    <div class="alert alert-success bg-success text-light border-0 alert-dismissible fade show" role="alert">
+                        ${success}
+                        <button type="button" class="btn-close"><i class="fa-solid fa-xmark" style="color: #ffffff;"></i></button>
+                    </div>` : ""}
+                <div class="form-group">
+                    <div class="input-text d-flex flex-row flex-nowrap align-items-baseline">
+                        <i class="far fa-user"></i>
+                        <input type="text" class="form-input" name="username" id="username" placeholder="Tên đăng nhập" value="${username}">
+                    </div>
+                </div>
+                <span class="text-danger" id="errorUsername">${errorUsername}</span>
+                <div class="form-group">
+                    <div class="input-text d-flex flex-row flex-nowrap align-items-baseline">
+                        <i class="fas fa-key"></i>
+                        <input type="password" class="form-input" name="password" id="password" placeholder="Mật khẩu">
+                        <div id="eye" class="">
+                            <i class="far fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <span class="text-danger" id="errorPassword">${errorPassword}</span>
+                <div class="d-flex">
+                    <input type="checkbox" name="keepLogin" value="true" id="keepLogin" ${keep ? "checked" : ""} />
+                    <label for="keepLogin" style="color: white; margin:0; margin-left: 10px">Duy trì đăng nhập</label>
+                </div>
+                <div class="btns d-flex flex-column">
+                    <button type="button" class="form-submit btn-submit">Đăng nhập</button>
+                    <a class="cancel bg-danger" href="/Home">Hủy bỏ</a>
+                </div>
+
+                <div class="funs-forget float-right text-right" style="font-size: 14px; text-align: right">
+                    <a style="color: aqua;" href="@ProgramWEB.Define.DefinePage.user_ForgetPassword.url">Quên Mật Khẩu</a>
+                </div>
+            </form>
+        `
+    }
+    var action = function () {
+        $(document).ready(function () {
+            var usernameInput = $('#username')
+            var passwordInput = $('#password')
+            $('.btn-close').click(function () {
+                error = null;
+                load();
+            })
+            $('#eye').click(function () {
+                $(this).toggleClass('open');
+                $(this).children('i').toggleClass('fa-eye-slash fa-eye');
+                if ($(this).hasClass('open')) {
+                    $(this).prev().attr('type', 'text');
+                } else {
+                    $(this).prev().attr('type', 'password');
+                }
+            });
+            $('.btn-submit').click(function () {
+                username = usernameInput.val();
+                password = passwordInput.val();
+                errorPassword = daucach;
+                errorUsername = daucach;
+                error = null;
+                if (username.length == 0) {
+                    errorUsername = 'Tên đăng nhập không được để trống'
+                }
+                else if (username.length > 30) {
+                    errorUsername = 'Tên đăng nhập không được quá 30 ký tự';
+                } else if (username != removeVietnameseTones(username)) {
+                    errorUsername = 'Tên đăng nhập phải là ký tự không dấu'
+                }
+                if (username.indexOf(' ') != -1) {
+                    errorUsername += '<br>Tên đăng nhập không được chứa dấu cách';
+                }
+                if (username.split('').some((item) => !(
+                    (item >= 'a' && item <= 'z')
+                    || (item >= 'A' && item <= 'Z')
+                    || (item >= '0' && item <= '9'))))
+                {
+                    errorUsername += '<br>Tên đăng nhập chỉ được chứa các ký tự từ a -> z, A -> Z, 0 -> 9';
+                }
+                if (password.length < 6) {
+                    errorPassword = 'Mật khẩu phải có tối thiểu 6 ký tự';
+                }
+                if (errorPassword == daucach && errorUsername == daucach) {
+                    var data = {
+                        username : username,
+                        password : password,
+                        keepLogin : keep
+                    }
+                    $.ajax({
+                        url: "/User/ToLogin",
+                        data: data,
+                        type: "POST",
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data['error']) {
+                                error = data['error']
+                                load()
+                            }
+                            if (data['success']) {
+                                success = data['success']
+                                if (data['url'])
+                                    setTimeout(function () {
+                                        window.location = window.location.origin + '/' + data['url'];
+                                    }, 1000)
+                                load()
+                            }
+                        },
+                        error: function (data) {
+                            if (data['error']) {
+                                error = data['error']
+                                load()
+                            }
+                        }
+                    })
+                } 
+                load()
+            })
+            $('#keepLogin').change(function () {
+                keep = $('#keepLogin').prop('checked');
+            })
+        })
+    }
+    var load = function () {
+        root.html(createContent())
+        action()
+    }
+    load()
+</script>

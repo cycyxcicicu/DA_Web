@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.pageNow =
+    new LocationPage(DefinePage.home);
+}
+@using ProgramWEB.Models.Data;
+@using ProgramWEB.Define;
+@using ProgramWEB.Libary;
+@section cssContent {
+    <link href="~/Contents/main/css/management.css" rel="stylesheet" />
+    <link href="~/Contents/main/css/home-management.css" rel="stylesheet" />
+}
+<div class="content-wrapper">
+</div>
+@section jsContent {
+    <script>
+        var json = JSON.parse("@ViewBag.data".replace(/&quot;/g, '"'));
+        var data = json['data']
+        $('.content-wrapper').html(
+            `
+            ${data.reduce(function (result, item) {
+                console.log(item)
+                return result + `
+                <div>
+                    <h3>${item['name']}</h3>
+                    <ul style="padding: 0 20px" class="row">
+                    ${item['data'].reduce(function (result1, item1) {
+                        console.log('\t' + item1)
+                        return result1 + `
+                        <div class="col-md-6 col-lg-3">
+                            <div class="card material-card" onclick="toPage('${item1.define.url}')">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <span>
+                                            ${item1.define.name}
+                                        </span>
+                                        <span>
+                                            <i class="fa-solid fa-right-to-bracket"></i>
+                                        </span>
+                                    </h5>
+                                    <div class="d-flex align-items-center mb-2 mt-4">
+                                        <h2 class="mb-0 display-5">
+                                            <i class="${item1.icon}"></i>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+                    }, '')}
+                    </ul>
+                </div>
+                `
+            }, '')}
+            `
+        )
+        var toPage = url => { window.location = url; }
+    </script>
+}

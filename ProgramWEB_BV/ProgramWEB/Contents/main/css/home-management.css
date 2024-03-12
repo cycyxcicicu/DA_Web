@@ -1,0 +1,88 @@
+﻿:root {
+    --font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --color-main: #0971b8;
+    --color-danger: #dc3545;
+}
+
+.content-wrapper * {
+    font-weight: 700;
+    font-family: var(--font-family)
+}
+
+.content-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin: 15px 0;
+    text-transform: none;
+    color: #333333;
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+ul > div {
+    padding: 10px;
+}
+
+.card {
+    background-color: var(--color-main);
+    position: relative;
+    cursor: pointer;
+}
+
+.card * {
+    color: white !important;
+}
+
+#main {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.footer {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+h5 > span:last-child i {
+    font-size: 30px;
+}
+
+.fw-normal {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    top: -10px;
+}
+
+.card-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.card:hover .card-title i::before {
+    content: "\f2f5";
+}
+
+@keyframes xoay {
+    from {
+        content: "\f2f5";
+    }
+    to {
+        content: "\f2f6";
+    }
+}
+
+@keyframes xoay1 {
+    from {
+        content: "\f2f6";
+    }
+    to {
+        content: "\f2f5";
+    }
+}
+
+i {
+    font-family: "Font Awesome 6 Free" !important;
+}

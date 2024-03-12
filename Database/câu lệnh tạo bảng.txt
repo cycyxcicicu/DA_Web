@@ -1,0 +1,218 @@
+CREATE   database Quan_Ly_Nhan_Su
+go
+use Quan_Ly_Nhan_Su
+go
+create table NhanSu
+(
+	NS_Ma varchar(10) PRIMARY KEY,
+	NS_HoVaTen nvarchar(50) NOT NULL,
+	NS_GioiTinh BIT NOT NULL,
+	NS_NgaySinh DATE NOT NULL,
+	NS_SoDienThoai char(10) NOT NULL,
+	NS_Email varchar(100) NOT NULL,
+	NS_DiaChi NTEXT NOT NULL,
+	NS_SoCCCD char(12) NOT NULL,
+	NS_SoTaiKhoanNganHang CHAR(10),
+	NS_TenChuTaiKhoan VARCHAR(50),
+	NS_HocVan NVARCHAR(20),
+	NS_NgayVao DATE NOT NULL
+);
+create table PhongBan
+(
+	PB_Ma varchar(10) PRIMARY KEY,
+	PB_Ten nvarchar(50) NOT NULL,
+	PB_VaiTro NVARCHAR(50),
+	NS_Ma VARCHAR(10)
+);
+create table BoPhan(
+	BP_Ma varchar(10) PRIMARY KEY,
+	BP_Ten nvarchar(50) NOT NULL,
+	BP_ChuyenMon NVARCHAR(50),
+	PB_Ma varchar(10) NOT NULL,
+	NS_Ma VARCHAR(10)
+);
+create table BaoHiem
+(
+	BH_Ma BIGINT IDENTITY PRIMARY KEY,
+	BH_SoBaoHiem CHAR(10) NOT NULL,
+	BH_NgayCap DATE NOT NULL,
+	BH_NgayHetHan DATE NOT NULL,
+	BH_NoiCap NVARCHAR(50) NOT NULL,
+	BH_NoiKhamBenh NVARCHAR(50),
+	NS_Ma varchar(10) NOT NULL,
+	CHECK(BH_NgayCap < BH_NgayHetHan)
+);
+create table TaiKhoan
+(
+	TK_TenDangNhap varchar(30) PRIMARY KEY,
+	TK_MatKhau text not null,
+	TK_QuyenAdmin BIT NOT NULL DEFAULT 0,
+	TK_QuyenQuanLy BIT NOT NULL DEFAULT 0,
+	TK_BiKhoa BIT NOT NULL DEFAULT 0,
+	TK_ThoiGianMoKhoa DATETIME,
+	TK_MaXacThuc char(6),
+	TK_ThoiGianTaoMa datetime,
+	TK_AnhDaiDien TEXT,
+	NS_Ma varchar(10) NOT NULL unique
+);
+create table KhenThuongKyLuat
+(
+	KTKL_Ma BIGINT IDENTITY PRIMARY KEY,
+	KTKL_MoTa ntext,
+	KTKL_ThoiGian datetime,
+	KTKL_HinhThuc NVARCHAR(20) NOT NULL,
+	KTKL_SoTien FLOAT NOT NULL,
+	NS_Ma varchar(10) NOT NULL
+);
+create table ChamCong
+(
+	CC_Ma BIGINT IDENTITY PRIMARY KEY,
+	CC_ThoiGianDen datetime not null,
+	CC_ThoiGianVe DATETIME,
+	CC_Ngay DATE NOT NULL,
+	NS_Ma varchar(10) NOT NULL,
+	CHECK(CC_ThoiGianDen < CC_ThoiGianVe)
+);
+CREATE TABLE CaLam
+(
+	CL_Ma VARCHAR(10) PRIMARY KEY,
+	CL_TenCa NVARCHAR(30) NOT NULL,
+	CL_GioBatDau SMALLINT NOT NULL CHECK(CL_GioBatDau >= 0 AND CL_GioBatDau <= 23),
+	CL_PhutBatDau SMALLINT NOT NULL CHECK(CL_PhutBatDau >= 0 AND CL_PhutBatDau <= 60),
+	CL_GioKetThuc SMALLINT NOT NULL CHECK(CL_GioKetThuc >= 0 AND CL_GioKetThuc <= 23),
+	CL_PhutKetThuc SMALLINT NOT NULL CHECK(CL_PhutKetThuc >= 0 AND CL_PhutKetThuc <= 60),
+	CHECK(CL_GioBatDau < CL_GioKetThuc)
+);
+CREATE TABLE HopDong
+(
+	 HD_Ma BIGINT IDENTITY PRIMARY KEY,
+	 HD_NgayBatDau DATE NOT NULL,
+	 HD_NgayKetThuc DATE,
+	 HD_HinhThucLamViec NVARCHAR(30) NOT NULL,
+	 HD_Luong FLOAT NOT NULL,
+	 HD_DonViTinhuong NVARCHAR(20) NOT NULL,
+	 HD_CongViec NVARCHAR(30) NOT NULL,
+	 NS_Ma VARCHAR(10) NOT NULL, 
+	 CHECK(HD_NgayBatDau < HD_NgayKetThuc)
+ );
+ CREATE TABLE LichSuLamViec 
+(
+	 LSLV_Ma BIGINT IDENTITY PRIMARY KEY,
+	 LSLV_NgayBatDau DATE NOT NULL,
+	 LSLV_NgayKetThuc DATE,
+	 LSLV_ChucVu NVARCHAR(50) NOT NULL,
+	 NS_Ma VARCHAR(10) NOT NULL,
+	 BP_Ma VARCHAR(10),
+	 CHECK(LSLV_NgayBatDau < LSLV_NgayKetThuc)
+ );
+ CREATE TABLE NgayNghi 
+ (
+	NN_Ma BIGINT IDENTITY PRIMARY KEY,
+	NN_Ngay DATE NOT NULL UNIQUE,
+	NN_GhiChu NVARCHAR(50)
+ )
+
+ALTER TABLE BaoHiem 
+ADD CONSTRAINT BH_FK1 FOREIGN KEY 
+(NS_Ma) REFERENCES NhanSu(NS_Ma) 
+ON DELETE CASCADE
+
+ALTER TABLE TaiKhoan 
+ADD CONSTRAINT TK_FK1 FOREIGN KEY 
+(NS_Ma) REFERENCES NhanSu(NS_Ma) 
+ON DELETE CASCADE
+
+ALTER TABLE ChamCong 
+ADD CONSTRAINT CC_FK1 FOREIGN KEY 
+(NS_Ma) REFERENCES NhanSu(NS_Ma) 
+ON DELETE CASCADE
+
+ALTER TABLE dbo.KhenThuongKyluat
+ADD CONSTRAINT KTKL_FK1 FOREIGN KEY(NS_Ma)
+REFERENCES dbo.NhanSu(NS_Ma)
+ON DELETE CASCADE
+
+ALTER TABLE dbo.HopDong ADD
+CONSTRAINT HD_FK11 FOREIGN KEY(NS_Ma)
+REFERENCES dbo.NhanSu(NS_Ma)
+ON DELETE CASCADE
+
+ALTER TABLE dbo.LichSuLamViec ADD
+CONSTRAINT LSLV_FK1 FOREIGN KEY(NS_Ma)
+REFERENCES dbo.NhanSu(NS_Ma)
+ON DELETE CASCADE,
+CONSTRAINT LSLV_FK2 FOREIGN KEY(BP_Ma)
+REFERENCES dbo.BoPhan(BP_Ma)
+ON DELETE SET NULL
+
+ALTER TABLE dbo.BoPhan ADD
+CONSTRAINT BP_FK1 FOREIGN KEY(PB_Ma)
+REFERENCES dbo.PhongBan(PB_Ma)
+ON DELETE CASCADE,
+CONSTRAINT BP_FK2 FOREIGN KEY(NS_Ma)
+REFERENCES dbo.NhanSu(NS_Ma)
+ON DELETE SET NULL
+
+ALTER TABLE dbo.PhongBan ADD
+CONSTRAINT PB_FK11 FOREIGN KEY(NS_Ma)
+REFERENCES dbo.NhanSu(NS_Ma)
+ON DELETE SET NULL
+
+GO
+
+
+INSERT INTO dbo.NhanSu
+(
+    NS_Ma,
+    NS_HoVaTen,
+    NS_GioiTinh,
+    NS_NgaySinh,
+    NS_SoDienThoai,
+    NS_Email,
+    NS_DiaChi,
+    NS_SoCCCD,
+    NS_SoTaiKhoanNganHang,
+    NS_TenChuTaiKhoan,
+    NS_HocVan,
+    NS_NgayVao
+)
+VALUES
+(   'admin',        -- NS_Ma - char(10)
+    N'admin',       -- NS_HoVaTen - nvarchar(50)
+    1,      -- NS_GioiTinh - bit
+    '2003-11-10', -- NS_NgaySinh - date
+    '0886454996',        -- NS_SoDienThoai - char(10)
+    'thuong0206066@huce.edu.vn',        -- NS_Email - varchar(100)
+    N'Hoàng Văn Thái',       -- NS_DiaChi - ntext
+    '036203013524',        -- NS_SoCCCD - char(12)
+    NULL,      -- NS_SoTaiKhoanNganHang - char(10)
+    NULL,      -- NS_TenChuTaiKhoan - varchar(50)
+    NULL,      -- NS_HocVan - nvarchar(20)
+    GETDATE()  -- NS_NgayVao - date
+    )
+-- Mat khau la namdinh1
+INSERT INTO dbo.TaiKhoan
+(
+    TK_TenDangNhap,
+    TK_MatKhau,
+    TK_QuyenAdmin,
+    TK_QuyenQuanLy,
+    TK_BiKhoa,
+    TK_ThoiGianMoKhoa,
+    TK_MaXacThuc,
+    TK_ThoiGianTaoMa,
+    TK_AnhDaiDien,
+    NS_Ma
+)
+VALUES
+(   'admin',      -- TK_TenDangNhap - varchar(30)
+    '$2a$10$WY/kemLQ5LkyQXEiH71pMefNH4UpOuDBBaou9tiPD/Ah24NTgHReK',      -- TK_MatKhau - text
+    1, -- TK_QuyenAdmin - bit
+    1, -- TK_QuyenQuanLy - bit
+    0, -- TK_BiKhoa - bit
+    NULL,    -- TK_ThoiGianMoKhoa - datetime
+    NULL,    -- TK_MaXacThuc - char(6)
+    NULL,    -- TK_ThoiGianTaoMa - datetime
+    NULL,    -- TK_AnhDaiDien - text
+    'admin'       -- NS_Ma - char(10)
+    )

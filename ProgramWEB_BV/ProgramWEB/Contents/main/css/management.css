@@ -1,0 +1,480 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    line-height: 1.6;
+    font-family: var(--font-family);
+}
+
+:root {
+    --font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --color-main: #0971b8;
+    --color-danger: #dc3545;
+}
+
+form * {
+    font-weight: 400;
+}
+
+#background {
+    position: relative;
+}
+
+img {
+    width: 100%;
+}
+
+.clr-white {
+    color: white !important;
+}
+
+p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .d-bl {
+        display: block !important;
+    }
+
+    .tablet-mr-10 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .header-view-list,
+    .header-sort-list {
+        transform: translateX(0) !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 !important;
+        margin-bottom: 20px;
+    }
+}
+
+#sidebar-user {
+    border-radius: 30px;
+    display: none;
+}
+
+#sidebar-user a {
+    background-color: rgba(33, 37, 41, 1);
+    color: white;
+    }
+
+#sidebar-user ul {
+    background-color: white;
+    padding: 0;
+    border: 1px solid rgba(33, 37, 41, 1);
+}
+
+.nav-content ul li a {
+    padding: 10px 30px;
+}
+
+#sidebar-user ul li a {
+    background-color: rgba(33, 37, 41, 1);
+    color: white;
+}
+
+#sidebar-user ul li a i {
+    font-size: 14px;
+}
+
+#sidebar-user ul li a:hover {
+    background-color: white;
+    color: var(--color-main);
+}
+
+#sidebar-nav .nav-item:first-child .nav-link:first-child:hover {
+    opacity: 0.8;
+}
+
+.card-header {
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background-color: white;
+}
+
+.content-wrapper .functions .list-function {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    padding: 0 0 10px;
+    margin: 0;
+}
+
+.content-wrapper .functions .list-function .function {
+    padding: 6px 12px;
+    font-size: 16px;
+    color: white;
+    background-color: var(--color-main);
+    list-style: none;
+    font-weight: 600;
+    margin-right: 10px;
+    border: 1px solid var(--color-main);
+    border-radius: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.content-wrapper .functions .list-function .function i {
+    font-size: 16px;
+    margin-right: 10px;
+    color: #ffffff;
+}
+
+.content-wrapper .functions .list-function .function:hover,
+.content-wrapper .functions .list-function .function:hover i {
+    background-color: white;
+    color: var(--color-main) !important;
+}
+
+.card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-functions {
+    flex-wrap: wrap;
+}
+
+.header-view-list,
+.header-sort-list {
+    z-index: 4;
+    width: 220px;
+    text-align: right;
+    background-color: var(--color-main);
+    transform: translateX(-100%);
+    color: white !important;
+    padding: 0;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 20px 5px, rgba(0, 0, 0, 0.2) 0px 10px 10px;
+    animation: upListView linear 0.4s, downListView linear 0.4s;
+    padding: 10px
+}
+
+.header-view-list li,
+.header-sort-list li {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    background-color: #ffffff;
+    align-items: end;
+    align-items: center;
+    justify-content: right;
+    padding: 8px 16px;
+    background-color: var(--color-main);
+    border-bottom: 1px solid white;
+    font-size: 16px;
+}
+
+.card .header-view-list li:last-child,
+.card .header-sort-list li:last-child {
+    border: 0;
+    justify-content: center;
+    border-radius: 30px;
+    margin-top: 10px;
+    background-color: white;
+    color: black;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+.card .header-view-list li:hover,
+.card .header-sort-list li:hover {
+    opacity: 0.8;
+}
+
+.card .header-view-list li input,
+.card .header-sort-list li input {
+    margin-left: 5px;
+}
+
+.text-view, .text-sort {
+    padding: 8px 16px;
+    background-color: var(--color-main);
+    color: white;
+    border: 1px solid var(--color-main);
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.text-view:hover, .text-sort:hover {
+    background-color: white;
+    color: var(--color-main);
+}
+
+@keyframes upListView {
+    from {
+        opacity: 1
+    }
+
+    to {
+        opacity: 0
+    }
+}
+
+@keyframes downListView {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.card-footer {
+    background-color: white;
+}
+
+.card-footer ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.card-footer ul li a {
+    font-size: 16px;
+}
+
+.btns {
+    margin-top: 10px;
+}
+
+#root {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#main {
+    color: rgba(33, 37, 41, 1);
+    background-color: white;
+    max-width: 100% !important;
+    padding: 10px;
+}
+
+#the-lap {
+    padding-top: 74px;
+}
+
+input:disabled {
+    opacity: 0.6 !important;
+}
+
+input, .input-password, .input-password-repeat, .input-old-password, .input-new-password, .input-repeat-new-password {
+    border: 1px solid #c1bbbb !important;
+}
+
+.btn-xuat-file {
+    padding: 0 10px !important;
+}
+
+.page-item {
+    border: 1px solid #e1e1e1;
+}
+
+.page-link {
+    border: 0;
+}
+
+.wide {
+    width: 100% !important;
+}
+
+#content {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 67px;
+    padding-bottom: 0;
+}
+
+@media (min-width: 1200px) {
+    #content {
+        padding-left: 280px;
+    }
+
+    #sidebar.active + #content {
+        padding-left: 90px;
+    }
+}
+
+.container-fluid {
+    padding: 0;
+}
+
+.footer {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.breadcrumb {
+    padding: 0;
+}
+
+.breadcrumb-item a {
+    color: #0971B8;
+}
+
+.footer {
+    margin-top: 0;
+}
+
+.btn-primary {
+    background-color: var(--color-main);
+    border-color: var(--color-main)
+}
+
+.btn-primary:hover {
+    background-color: var(--color-main);
+}
+
+.table-hover tbody tr:hover, .table-hover tbody tr:focus {
+    background-color: #ffffff !important;
+}
+
+.in-here {
+    background-color: var(--color-main) !important;
+    color: white;
+}
+
+#part-add {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 5;
+    padding: 20px;
+}
+
+#part-add #content-add {
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    position: relative;
+    border-radius: 0;
+    max-width: 1200px;
+}
+
+.btn-close-form i {
+    color: black !important;
+}
+
+#part-add #content-add .btn-close-form {
+    border-radius: 0;
+}
+
+button i {
+    color: black;
+}
+
+.btn-close-form:hover {
+    background-color: #FF0000 !important;
+    color: white !important;
+}
+
+.btn-close-form:hover i {
+    color: white !important;
+}
+
+.card-tools {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+#sidebar {
+    z-index: 5;
+}
+
+#content-add {
+    max-height: 100%;
+    overflow: auto;
+}
+
+#content-add .card-body {
+    padding-top: 40px;
+}
+
+#view-loader {
+    background-color: var(--color-main)
+}
+
+.icon_info ul.user_profile_dd > li {
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.col-md-6 {
+    display: grid;
+}
+
+.errorCL, .successCL {
+    width: calc(100% - calc(var(--bs-gutter-x)));
+    margin-left: calc(var(--bs-gutter-x) * .5);
+}
+
+@media (max-width:1495px) {
+    table {
+        display: block;
+        overflow: auto;
+    }
+}
+
+#table-export {
+    position: absolute;
+    top: 0;
+    left: 0;
+    left: 0;
+}
+
+#table-export .back-export {
+    background-color: black;
+    opacity: 0.8;
+    position: fixed;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+}
+
+#table-export .content-table-export {
+    background-color: white;
+    opacity: 1;
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    right: 20px;
+    overflow: auto;
+    z-index: 10;
+    max-height: 80vh;
+    padding: 20px;
+}
+
+#table-export .content-table-export table {
+    border: 1px solid black;
+}
+
+#table-export .content-table-export button {
+    float: right;
+    margin-left: 5px;
+}
+
+#table-export h2 {
+    margin-bottom: 20px;
+    font-family: var(--font-family);
+}
